@@ -1,5 +1,6 @@
 import logging
 import os
+import shlex
 import subprocess
 from pathlib import Path
 
@@ -33,9 +34,8 @@ class Backup:
         except KeyError:
             raise UnknownModuleError(f'No config block found for module `{module}`.')
 
-        try:
-            path = Path(module_config['path'])
-        except KeyError:
+        path = module_config.getabspath('path')
+        if path is None:
             raise InvalidConfigError(f'No path is defined in the config block of module `{module}`.')
 
         try:
@@ -46,16 +46,16 @@ class Backup:
         base_opts = rsync_config.getopts('base opts', '')
         opts = module_config.getopts('opts', '')
 
-        rsync_cmd = f'rsync {base_opts} {opts} {path.absolute()}{os.sep} {host}::{module}'
+        rsync_cmd = shlex.split(f'rsync {base_opts} {opts} {path.absolute()}{os.sep} {host}::{module}')
         logger.info(f'Backing up module {module}...')
-        logger.info(rsync_cmd)
+        logger.info(' '.join(rsync_cmd))
 
         if dry:
             logger.info('Running in dry mode: exiting.')
             return 0
 
         logger.info('Running rsync...')
-        result = subprocess.run(rsync_cmd, shell=True)
+        result = subprocess.run(rsync_cmd)
         retcode = result.returncode
 
         logger.info('')
