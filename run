@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import sys
+
+from backup import Backup, ALL_MODULES_ARGNAME
+from backup.exceptions import *
+from backup.utils import exit
+
+
+if __name__ == '__main__':
+    try:
+        if len(sys.argv) < 2:
+            raise NoModulesSuppliedError
+
+        backup = Backup()
+        if sys.argv[1] == ALL_MODULES_ARGNAME:
+                backup.backup_all()
+        else:
+            backup.backup_modules(*sys.argv[1:])
+    except BackupError as err:
+        # Catch all exceptions from this application and map these to `exit` calls.
+        exit(err.retcode, err.msg)
