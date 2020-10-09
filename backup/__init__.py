@@ -77,4 +77,7 @@ class Backup:
         return 0
 
     def backup_all(self, dry=False):
-        self.backup_modules(MODULES)
+        all_modules = [module.split('module: ')[1]
+                       for module in self.config.sections()
+                       if module.startswith('module: ')]
+        self.backup_modules(*all_modules)
