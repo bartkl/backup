@@ -2,23 +2,10 @@
 
 import sys
 
-from backup import Backup, ALL_MODULES_ARGNAME
-from backup.exceptions import *
-from backup.utils import exit
+from backup import cli
 
 
 if __name__ == '__main__':
-    try:
-        if len(sys.argv) < 2:
-            raise NoModulesSuppliedError
+    cli()
 
-        backup = Backup()
-        if sys.argv[1] == ALL_MODULES_ARGNAME:
-                backup.backup_all()
-        else:
-            backup.backup_modules(*sys.argv[1:])
-    except BackupError as err:
-        # Catch all exceptions from this application and map these to `exit` calls.
-        exit(err.retcode, err.msg)
 
-    exit(0, 'Backup succesful.')

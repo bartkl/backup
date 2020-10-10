@@ -2,6 +2,7 @@ import logging
 import os
 import shlex
 import subprocess
+import sys
 from pathlib import Path
 
 from . import utils
@@ -81,3 +82,20 @@ class Backup:
                        for module in self.config.sections()
                        if module.startswith('module: ')]
         self.backup_modules(*all_modules)
+
+
+def cli():
+    try:
+        if len(sys.argv) < 2:
+            raise NoModulesSuppliedError
+
+        backup = Backup()
+        if sys.argv[1] == ALL_MODULES_ARGNAME:
+                backup.backup_all()
+        else:
+            backup.backup_modules(*sys.argv[1:])
+    except BackupError as err:
+        # Catch all exceptions from this application and map these to `exit` calls.
+        utils.exit(err.retcode, err.msg)
+
+    utils.exit(0, 'Backup succesful.')
