@@ -39,13 +39,13 @@ The config file contains:
   Here global Rsync related options can be defined.
 
   Fields:
-  - `host`: The Rsync daemon host to backup to _(required)_.
+  - `host`: The Rsync daemon host to backup to _(Required)_.
   - `base opts`: Whitespace separated string of Rsync options that will be used for all modules.
 * One or more module sections.
   These are module-specific config blocks to configure how to call rsync for a certain module. These sections have their names prefixed, like `module: books`.
 
   Fields:
-  - `path`: The path of the source files to be synced _(required)_.
+  - `path`: The path of the source files to be synced _(Required)_.
   - `opts`: Whitespace separated string of Rsync options that will be used (on top of the base options above) for this module specifically.
 
 You can define your own fields for re-use later in the file as well. This is particularly useful when repeating something often, like a base path.

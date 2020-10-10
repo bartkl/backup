@@ -10,7 +10,6 @@ setup(name='Backup',
       url='https://github.com/bartkl/backup',
       packages=find_packages(),
       install_requires=[''],
-      include_package_data=True,
       entry_points={'console_scripts': [
         'backup = backup:cli']}
 )
