@@ -47,7 +47,7 @@ The config file contains:
 
   Fields:
   - `path`: The path of the source files to be synced _(Required)_.
-  - `transfer direction`: Either `push` or `pull`. Determines whether files for this module are sent to or received from the configured host.
+  - `transfer direction`: Either `push` or `pull`. Determines whether files for this module are sent to or received from the configured host _(Required)_.
   - `opts`: Whitespace separated string of Rsync options that will be used (on top of the base options above) for this module specifically.
 
 You can define your own fields for re-use later in the file as well. This is particularly useful when repeating something often, like a base path.
