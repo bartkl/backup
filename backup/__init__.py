@@ -1,6 +1,7 @@
 import logging
 import os
 import shlex
+import signal
 import subprocess
 import sys
 from pathlib import Path
@@ -56,8 +57,13 @@ class Backup:
             return 0
 
         logger.info('Running rsync...')
-        result = subprocess.run(rsync_cmd)
-        retcode = result.returncode
+        try:
+            rsync_proc = subprocess.Popen(rsync_cmd)
+            rsync_proc.wait()
+        except KeyboardInterrupt:
+            rsync_proc.send_signal(signal.SIGINT)
+
+        retcode = rsync_proc.returncode
 
         logger.info('')
         if retcode == 0:
@@ -91,7 +97,7 @@ def cli():
 
         backup = Backup()
         if sys.argv[1] == ALL_MODULES_ARGNAME:
-                backup.backup_all()
+            backup.backup_all()
         else:
             backup.backup_modules(*sys.argv[1:])
     except BackupError as err:
