@@ -47,9 +47,14 @@ class Backup:
 
         base_opts = rsync_config.getopts('base opts', '')
         opts = module_config.getopts('opts', '')
+        transfer_direction = module_config['transfer direction']
 
-        rsync_cmd = shlex.split(f'rsync {base_opts} {opts} {path.absolute()}{os.sep} {host}::{module}')
-        logger.info(f'Backing up module {module}...')
+        logger.info(f'Backing up module {module} ({transfer_direction}ing)...')
+        if transfer_direction == "push":
+            rsync_cmd = shlex.split(f'rsync {base_opts} {opts} {path.absolute()}{os.sep} {host}::{module}')
+        elif transfer_direction == "pull":
+            rsync_cmd = shlex.split(f'rsync {base_opts} {opts} {host}::{module} {path.absolute()}{os.sep}')
+
         logger.info(' '.join(rsync_cmd))
 
         if dry:
