@@ -5,6 +5,7 @@ What it does for me:
 * Configure different rsync calls in a human readable fashion through the `config.ini` file.
 * Maintain the base parameters I wish to include for all rsync calls in a central place (the `rsync` section).
 * It let's me define config blocks for each rsync call (module), in which I supply the local path and specific parameters. The path can make use of a shared base path you can set in the `rsync` config block.
+* Using the `transfer direction` option, I can configure per module whether I wish to pull from the host, or push to it.
 * It can easily be configured to log to file, but I have it configured to log to stdout when run manually, and to `journald` otherwise (see _Scheduling with journal logging_).
     - To make it log to file, simply provide a base option `--log-file <FILEPATH>` in the `rsync` section.
 * When backing up manually, it allows intuitive usage by simply stating the module name(s) you wish to back up, and that's it.
@@ -46,6 +47,7 @@ The config file contains:
 
   Fields:
   - `path`: The path of the source files to be synced _(Required)_.
+  - `transfer direction`: Either `push` or `pull`. Determines whether files for this module are sent to or received from the configured host.
   - `opts`: Whitespace separated string of Rsync options that will be used (on top of the base options above) for this module specifically.
 
 You can define your own fields for re-use later in the file as well. This is particularly useful when repeating something often, like a base path.
@@ -55,9 +57,9 @@ See the example below which demonstrates what's been layed out here. It's a vali
 ### Example
 ```ini
 [rsync]
-host = me@backup-host
+host = me@host
 password file = /home/me/.config/backup/rsync_password
-source base path = /media/backup
+source base path = /media/
 base opts =
     --itemize-changes
     --verbose
@@ -66,17 +68,15 @@ base opts =
     --delete
     --password-file=${password file}
 
-[module: books]
-path = ${rsync:source base path}/data/books
+[module: stuff]
+transfer direction = pull
+path = ${rsync:source base path}/data/stuff
 opts = --partial --inplace
 
-[module: chat-logs]
-path = ${rsync:source base path}/data/chat-logs
+[module: links]
+transfer direction = push
+path = ${rsync:source base path}/data/.torrents
 opts = --whole-file --no-links
-
-[module: photos]
-path = ${rsync:source base path}/photos
-opts = --whole-file
 ```
 
 
