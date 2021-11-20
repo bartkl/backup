@@ -59,7 +59,7 @@ class Backup:
         logger.info('Running rsync...')
         try:
             rsync_proc = subprocess.Popen(rsync_cmd)
-            rsync_proc.wait(rsync_cmd)
+            rsync_proc.wait()
         except KeyboardInterrupt:
             rsync_proc.send_signal(signal.SIGINT)
 
