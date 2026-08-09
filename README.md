@@ -18,14 +18,14 @@ Currently, I haven't released this on PyPi and I don't know if I'm going to.
 For now, I just install directly from the source code:
 
 ```shell
-# pip3 install git+https://github.com/bartkl/backup.git#egg=Backup
+# pipx install git+https://github.com/bartkl/backup.git#egg=Backup
 ```
 
 ### Uninstall
-To uninstall, simply use pip again:
+To uninstall, simply run:
 
 ```shell
-# pip3 uninstall backup
+# pipx uninstall backup
 ```
 
 ## Configuration
